@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hindi Translator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+Devanagari:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <div class="grain"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <span class="logo-hindi">हिन्दी</span>
+      <span class="logo-arrow">→</span>
+      <span class="logo-target" id="headerTarget">Any Language</span>
+    </div>
+    <p class="tagline">OCR · Translation · Intelligence</p>
+  </header>
+
+  <main>
+
+    <!-- MODE TABS -->
+    <div class="mode-tabs">
+      <button class="tab active" data-mode="ocr" onclick="switchMode('ocr')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Image OCR + Translate
+      </button>
+      <button class="tab" data-mode="text" onclick="switchMode('text')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Type Text
+      </button>
+    </div>
+
+    <!-- TARGET LANGUAGE SELECTOR (shared across both modes) -->
+    <div class="lang-selector-bar" id="sharedLangBar">
+      <div class="lang-fixed">
+        <span class="lang-badge hindi-badge">हि</span>
+        <span>Hindi</span>
+      </div>
+      <div class="lang-arrow-icon">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+      <div class="lang-dropdown-wrap">
+        <label class="sr-only" for="targetLang">Translate to</label>
+        <select id="targetLang" onchange="onLangChange()">
+          <option value="eng_Latn">🇬🇧 English</option>
+          <option value="tam_Taml">தமிழ் Tamil</option>
+          <option value="tel_Telu">తెలుగు Telugu</option>
+          <option value="kan_Knda">ಕನ್ನಡ Kannada</option>
+          <option value="mal_Mlym">മലയാളം Malayalam</option>
+          <option value="mar_Deva">मराठी Marathi</option>
+          <option value="ben_Beng">বাংলা Bengali</option>
+          <option value="guj_Gujr">ગુજરાતી Gujarati</option>
+          <option value="pan_Guru">ਪੰਜਾਬੀ Punjabi</option>
+          <option value="urd_Arab">اردو Urdu</option>
+          <option value="ory_Orya">ଓଡ଼ିଆ Odia</option>
+          <option value="asm_Beng">অসমীয়া Assamese</option>
+          <option value="mai_Deva">मैथिली Maithili</option>
+          <option value="san_Deva">संस्कृतम् Sanskrit</option>
+          <option value="snd_Arab">سنڌي Sindhi</option>
+          <option value="kas_Arab">کٲشُر Kashmiri</option>
+          <option value="mni_Beng">মৈতৈলোন্ Manipuri</option>
+          <option value="npi_Deva">नेपाली Nepali</option>
+          <option value="kok_Deva">कोंकणी Konkani</option>
+          <option value="dgo_Deva">डोगरी Dogri</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- ── OCR MODE ── -->
+    <section id="ocr-mode" class="card mode-section active">
+
+      <div class="drop-zone" id="dropZone"
+           ondragover="handleDragOver(event)"
+           ondragleave="handleDragLeave(event)"
+           ondrop="handleDrop(event)"
+           onclick="document.getElementById('fileInput').click()">
+        <input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(event)" hidden />
+
+        <div class="drop-icon" id="dropIcon">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+        </div>
+        <p class="drop-main" id="dropMain">Drop a Hindi image here</p>
+        <p class="drop-sub">or click to browse · JPG, PNG, WebP</p>
+        <img id="imagePreview" class="image-preview" src="" alt="Preview" />
+      </div>
+
+      <!-- Extracted Hindi text -->
+      <div class="field-group" id="ocrExtractedGroup" style="display:none">
+        <label class="field-label">
+          <span class="lang-badge hindi-badge">हि</span>
+          Extracted Hindi Text (OCR)
+          <button class="edit-btn" id="ocrEditBtn" onclick="enableOcrEdit()">Edit</button>
+        </label>
+        <textarea id="ocrExtracted" class="text-box hindi-font" rows="4" readonly placeholder="Extracted text will appear here..."></textarea>
+      </div>
+
+      <button class="btn-primary" id="ocrTranslateBtn" onclick="runOCRAndTranslate()" style="display:none">
+        <span class="btn-text">Extract &amp; Translate</span>
+        <span class="btn-loader" style="display:none"><span class="spinner"></span> Processing...</span>
+      </button>
+
+      <!-- Result -->
+      <div class="result-box" id="ocrResult" style="display:none">
+        <div class="result-label">
+          <span class="lang-badge en-badge" id="ocrResultBadge">EN</span>
+          <span id="ocrResultLangName">English</span> Translation
+        </div>
+        <p class="result-text" id="ocrTranslation"></p>
+        <button class="copy-btn" onclick="copyText('ocrTranslation')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          Copy
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ── TEXT MODE ── -->
+    <section id="text-mode" class="card mode-section">
+
+  <!-- Source Language -->
+  <div class="field-group">
+    <label class="field-label">Source Language</label>
+    <select id="sourceLang" class="text-box">
+      <option value="eng_Latn">English</option>
+<option value="hin_Deva">Hindi</option>
+<option value="tam_Taml">Tamil</option>
+<option value="tel_Telu">Telugu</option>
+<option value="kan_Knda">Kannada</option>
+<option value="mal_Mlym">Malayalam</option>
+<option value="ben_Beng">Bengali</option>
+<option value="mar_Deva">Marathi</option>
+<option value="urd_Arab">Urdu</option>
+<option value="guj_Gujr">Gujarati</option>
+<option value="pan_Guru">Punjabi</option>
+<option value="ory_Orya">Odia</option>
+    </select>
+  </div>
+
+  <!-- Text Input -->
+  <div class="field-group">
+    <label class="field-label">Enter Text</label>
+    <textarea id="textInput" class="text-box" rows="6"
+              placeholder="Type text here..."></textarea>
+    <p class="char-count" id="charCount">0 characters</p>
+  </div>
+
+  <!-- Target Language -->
+  <div class="field-group">
+    <label class="field-label">Target Language</label>
+    <select id="textTargetLang" class="text-box">
+      <option value="eng_Latn">English</option>
+<option value="hin_Deva">Hindi</option>
+<option value="tam_Taml">Tamil</option>
+<option value="tel_Telu">Telugu</option>
+<option value="kan_Knda">Kannada</option>
+<option value="mal_Mlym">Malayalam</option>
+<option value="ben_Beng">Bengali</option>
+<option value="mar_Deva">Marathi</option>
+<option value="urd_Arab">Urdu</option>
+<option value="guj_Gujr">Gujarati</option>
+<option value="pan_Guru">Punjabi</option>
+<option value="ory_Orya">Odia</option>
+    </select>
+  </div>
+
+  <!-- Translate Button -->
+  <button class="btn-primary" onclick="translateTyped()">
+    <span class="btn-text">Translate</span>
+    <span class="btn-loader" id="textLoader" style="display:none">
+      <span class="spinner"></span> Translating...
+    </span>
+  </button>
+
+  <!-- Result -->
+  <div class="result-box" id="textResult" style="display:none">
+    <div class="result-label">
+      <span id="textResultLangName">Translation</span>
+    </div>
+    <p class="result-text" id="textTranslation"></p>
+
+    <button class="copy-btn" onclick="copyText('textTranslation')">
+      Copy
+    </button>
+  </div>
+
+</section>
+    <div class="toast" id="toast"></div>
+
+  </main>
+
+  <footer>
+    <p>Powered by <strong>NLLB-200</strong> · <strong>Tesseract OCR</strong> · <strong>FastAPI</strong></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
