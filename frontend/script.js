@@ -139,6 +139,7 @@ function loadImageFile(file) {
   reader.readAsDataURL(file);
 }
 
+
 // ── OCR + Translate ───────────────────────────────────────────────────────────
 async function runOCRAndTranslate() {
   if (!currentFile) {
@@ -282,13 +283,21 @@ document.getElementById("hindiInput")?.addEventListener("input", function () {
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function setButtonLoading(btn, loading) {
-  const text = btn.querySelector(".btn-text");
-  const loader = btn.querySelector(".btn-loader");
-  btn.disabled = loading;
-  if (text) text.style.display = loading ? "none" : "inline";
-  if (loader) loader.style.display = loading ? "flex" : "none";
-}
+    const text = btn.querySelector(".btn-text");
+    const loader = btn.querySelector(".btn-loader");
 
+    btn.disabled = loading;
+
+    if (loading) {
+        btn.style.opacity = "0.7";
+        text.style.display = "none";
+        loader.style.display = "flex";
+    } else {
+        btn.style.opacity = "1";
+        text.style.display = "inline";
+        loader.style.display = "none";
+    }
+}
 function copyText(elementId) {
   const text = document.getElementById(elementId).textContent;
   navigator.clipboard.writeText(text).then(() => showToast("Copied ✓", "success"));
@@ -380,3 +389,33 @@ function setLanguageByState(state) {
 window.addEventListener("DOMContentLoaded", function () {
     detectLocationAndSetLanguage();
 });
+
+//--speak text using Web Speech API
+async function speakText(elementId) {
+
+    const text = document.getElementById(elementId).textContent;
+    if (!text.trim()) return;
+
+    const targetLang = document.getElementById("targetLang").value;
+
+    const response = await fetch("http://localhost:8001/speak", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            text: text,
+            lang: targetLang
+        })
+    });
+
+    const blob = await response.blob();
+    const audioUrl = URL.createObjectURL(blob);
+
+    const audio = new Audio(audioUrl);
+    audio.play();
+}
+speechSynthesis.onvoiceschanged = function () {
+    const voices = speechSynthesis.getVoices();
+    voices.forEach(v => console.log(v.name, v.lang));
+};

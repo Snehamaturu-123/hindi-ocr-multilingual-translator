@@ -48,26 +48,24 @@
       <div class="lang-dropdown-wrap">
         <label class="sr-only" for="targetLang">Translate to</label>
         <select id="targetLang" onchange="onLangChange()">
-          <option value="eng_Latn">🇬🇧 English</option>
-          <option value="tam_Taml">தமிழ் Tamil</option>
-          <option value="tel_Telu">తెలుగు Telugu</option>
-          <option value="kan_Knda">ಕನ್ನಡ Kannada</option>
-          <option value="mal_Mlym">മലയാളം Malayalam</option>
-          <option value="mar_Deva">मराठी Marathi</option>
-          <option value="ben_Beng">বাংলা Bengali</option>
-          <option value="guj_Gujr">ગુજરાતી Gujarati</option>
-          <option value="pan_Guru">ਪੰਜਾਬੀ Punjabi</option>
-          <option value="urd_Arab">اردو Urdu</option>
-          <option value="ory_Orya">ଓଡ଼ିଆ Odia</option>
-          <option value="asm_Beng">অসমীয়া Assamese</option>
-          <option value="mai_Deva">मैथिली Maithili</option>
-          <option value="san_Deva">संस्कृतम् Sanskrit</option>
-          <option value="snd_Arab">سنڌي Sindhi</option>
-          <option value="kas_Arab">کٲشُر Kashmiri</option>
-          <option value="mni_Beng">মৈতৈলোন্ Manipuri</option>
-          <option value="npi_Deva">नेपाली Nepali</option>
-          <option value="kok_Deva">कोंकणी Konkani</option>
-          <option value="dgo_Deva">डोगरी Dogri</option>
+          <option value="eng_Latn">English</option>
+<option value="hin_Deva">Hindi</option>
+<option value="tam_Taml">Tamil</option>
+<option value="tel_Telu">Telugu</option>
+<option value="kan_Knda">Kannada</option>
+<option value="mal_Mlym">Malayalam</option>
+<option value="mar_Deva">Marathi</option>
+<option value="ben_Beng">Bengali</option>
+<option value="guj_Gujr">Gujarati</option>
+<option value="pan_Guru">Punjabi</option>
+<option value="urd_Arab">Urdu</option>
+<option value="ory_Orya">Odia</option>
+<option value="asm_Beng">Assamese</option>
+<option value="mai_Deva">Maithili</option>
+<option value="san_Deva">Sanskrit</option>
+<option value="snd_Arab">Sindhi</option>
+<option value="kas_Arab">Kashmiri</option>
+<option value="mni_Beng">Manipuri</option>
         </select>
       </div>
     </div>
@@ -120,6 +118,9 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
           Copy
         </button>
+        <button class="copy-btn" onclick="speakText('ocrTranslation')">
+  🔊 Speak
+</button>
       </div>
 
     </section>
@@ -137,12 +138,19 @@
 <option value="tel_Telu">Telugu</option>
 <option value="kan_Knda">Kannada</option>
 <option value="mal_Mlym">Malayalam</option>
-<option value="ben_Beng">Bengali</option>
 <option value="mar_Deva">Marathi</option>
-<option value="urd_Arab">Urdu</option>
+<option value="ben_Beng">Bengali</option>
 <option value="guj_Gujr">Gujarati</option>
 <option value="pan_Guru">Punjabi</option>
+<option value="urd_Arab">Urdu</option>
 <option value="ory_Orya">Odia</option>
+<option value="asm_Beng">Assamese</option>
+<option value="mai_Deva">Maithili</option>
+<option value="san_Deva">Sanskrit</option>
+<option value="snd_Arab">Sindhi</option>
+<option value="kas_Arab">Kashmiri</option>
+<option value="mni_Beng">Manipuri</option>
+
     </select>
   </div>
 
@@ -158,18 +166,24 @@
   <div class="field-group">
     <label class="field-label">Target Language</label>
     <select id="textTargetLang" class="text-box">
-      <option value="eng_Latn">English</option>
+       <option value="eng_Latn">English</option>
 <option value="hin_Deva">Hindi</option>
 <option value="tam_Taml">Tamil</option>
 <option value="tel_Telu">Telugu</option>
 <option value="kan_Knda">Kannada</option>
 <option value="mal_Mlym">Malayalam</option>
-<option value="ben_Beng">Bengali</option>
 <option value="mar_Deva">Marathi</option>
-<option value="urd_Arab">Urdu</option>
+<option value="ben_Beng">Bengali</option>
 <option value="guj_Gujr">Gujarati</option>
 <option value="pan_Guru">Punjabi</option>
+<option value="urd_Arab">Urdu</option>
 <option value="ory_Orya">Odia</option>
+<option value="asm_Beng">Assamese</option>
+<option value="mai_Deva">Maithili</option>
+<option value="san_Deva">Sanskrit</option>
+<option value="snd_Arab">Sindhi</option>
+<option value="kas_Arab">Kashmiri</option>
+<option value="mni_Beng">Manipuri</option>
     </select>
   </div>
 
@@ -187,9 +201,13 @@
       <span id="textResultLangName">Translation</span>
     </div>
     <p class="result-text" id="textTranslation"></p>
+    
 
     <button class="copy-btn" onclick="copyText('textTranslation')">
       Copy
+    </button>
+    <button class="copy-btn" onclick="speakText('textTranslation')">
+      🔊 Speak
     </button>
   </div>
 
