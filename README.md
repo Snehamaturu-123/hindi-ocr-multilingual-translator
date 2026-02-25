@@ -26,21 +26,21 @@ hindi_ocr_translator/
 
 ### 1. Install Tesseract OCR (System Package)
 
-**Ubuntu / Debian:**
+ Ubuntu / Debian: 
 ```bash
 sudo apt update
 sudo apt install tesseract-ocr tesseract-ocr-hin -y
 ```
 
-**macOS:**
+ macOS: 
 ```bash
 brew install tesseract
 brew install tesseract-lang   # installs all language packs including Hindi
 ```
 
-**Windows:**
+ Windows: 
 - Download installer from: https://github.com/UB-Mannheim/tesseract/wiki
-- During install, check "Additional language data" → select **Hindi**
+- During install, check "Additional language data" → select  Hindi 
 - Add Tesseract to your PATH
 
 Verify installation:
@@ -140,16 +140,22 @@ curl -X POST http://localhost:8001/ocr-and-translate \
 
 ## 🔧 Troubleshooting
 
-**`TesseractNotFoundError`** → Tesseract not in PATH. Set it manually in `ocr.py`:
+ `TesseractNotFoundError`  → Tesseract not in PATH. Set it manually in `ocr.py`:
 ```python
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract.exe'
 ```
 
-**`Error: Failed to load language 'hin'`** → Hindi language pack not installed:
+ `Error: Failed to load language 'hin'`  → Hindi language pack not installed:
 ```bash
 sudo apt install tesseract-ocr-hin   # Linux
 ```
 
-**Backend not reachable** → Make sure uvicorn is running on port 8001, and no firewall is blocking it.
+ Backend not reachable  → Make sure uvicorn is running on port 8001, and no firewall is blocking it.
 
-**Poor OCR results** → Try a higher resolution image. You can also use image editing tools to increase contrast before uploading.
+ Poor OCR results  → Try a higher resolution image. You can also use image editing tools to increase contrast before uploading.
+
+
+ ## 🔊 Features Added
+- Backend-based multilingual Text-to-Speech (gTTS)
+- Extended Indian language support via NLLB-200
+- Improved language mapping system
