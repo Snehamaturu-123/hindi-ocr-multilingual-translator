@@ -3,7 +3,25 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from translate import translate_text, SUPPORTED_LANGUAGES
 from ocr import extract_hindi_text_from_image, image_base64_to_bytes
+from fastapi.responses import StreamingResponse
+from io import BytesIO
+from gtts import gTTS
 
+TTS_LANGUAGE_MAP = {
+    "eng_Latn": "en",
+    "hin_Deva": "hi",
+    "tam_Taml": "ta",
+    "tel_Telu": "te",
+    "kan_Knda": "kn",
+    "mal_Mlym": "ml",
+    "mar_Deva": "mr",
+    "ben_Beng": "bn",
+    "guj_Gujr": "gu",
+    "pan_Guru": "pa",
+    "urd_Arab": "ur",
+    "ory_Orya": "or",
+    "asm_Beng": "as",
+}
 
 
 app = FastAPI(title="Hindi → Any Language OCR Translator")
@@ -141,5 +159,30 @@ def translate_base64_image(req: Base64ImageRequest):
         }
     except HTTPException:
         raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/speak")
+async def generate_speech(data: dict):
+    text = data.get("text")
+    lang_code = data.get("lang")
+
+    if not text:
+        raise HTTPException(status_code=400, detail="Text is required")
+
+    tts_lang = TTS_LANGUAGE_MAP.get(lang_code)
+
+    if not tts_lang:
+        raise HTTPException(status_code=400, detail="TTS not supported for this language")
+
+    try:
+        tts = gTTS(text=text, lang=tts_lang)
+
+        mp3_fp = BytesIO()
+        tts.write_to_fp(mp3_fp)
+        mp3_fp.seek(0)
+
+        return StreamingResponse(mp3_fp, media_type="audio/mpeg")
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

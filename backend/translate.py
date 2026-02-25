@@ -7,12 +7,18 @@ SUPPORTED_LANGUAGES = {
     "tel_Telu": "Telugu",
     "kan_Knda": "Kannada",
     "mal_Mlym": "Malayalam",
-    "ben_Beng": "Bengali",
     "mar_Deva": "Marathi",
-    "urd_Arab": "Urdu",
+    "ben_Beng": "Bengali",
     "guj_Gujr": "Gujarati",
     "pan_Guru": "Punjabi",
+    "urd_Arab": "Urdu",
     "ory_Orya": "Odia",
+    "asm_Beng": "Assamese",
+    "mai_Deva": "Maithili",
+    "san_Deva": "Sanskrit",
+    "snd_Arab": "Sindhi",
+    "kas_Arab": "Kashmiri",
+    "mni_Beng": "Manipuri"
 }
 
 
